@@ -1,5 +1,5 @@
 "use client";
-import AfterResponse from "@/Component/AfterResponse";
+import CanvasTemplate from "@/Component/CanvasTemplate";
 import TakeResponse from "@/Component/TakeResponse";
 import React from "react";
 
@@ -12,7 +12,7 @@ const Customise = () => {
           Home
         </span>
       </a>
-      {preserveData? <AfterResponse />:<TakeResponse setPreserveData={setPreserveData}/>}
+      {preserveData? <CanvasTemplate />:<TakeResponse setPreserveData={setPreserveData}/>}
     </div>
   );
 };

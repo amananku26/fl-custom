@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/Component/CanvasTemplate/MyEditor.ts", "src/Component/CanvasTemplate/MockupList.ts", "src/Component/CanvasTemplate/MockupItem.ts", "src/Component/CanvasTemplate/index.js", "src/Component/CanvasTemplate/DesignCanvasList.ts", "src/Component/CanvasTemplate/models.ts", "src/Component/CanvasTemplate/db.js"],
   "exclude": ["node_modules"]
 }
