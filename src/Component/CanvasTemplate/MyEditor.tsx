@@ -2,13 +2,13 @@ import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
 import { useEffect, useState } from "react";
 import { fabric } from "fabric";
 
-const MyEditor = (props) => {
+const MyEditor = (props: any) => {
   const { editor, onReady } = useFabricJSEditor();
   const [file, setFile] = useState(null);
 
   // console.log(props.mockupId, props.side);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e:any) => {
     setFile(e.target.files[0]);
   };
 
@@ -20,11 +20,11 @@ const MyEditor = (props) => {
     const reader = new FileReader();
 
     reader.onloadend = (e) => {
-      fabric.Image.fromURL(e.target.result, (oImg) => {
+      fabric.Image.fromURL(e?.target?.result as any, (oImg) => {
         oImg.scaleToWidth(100);
         oImg.scaleToHeight(100);
-        editor.canvas.centerObject(oImg);
-        editor.canvas.add(oImg);
+        editor&&editor.canvas.centerObject(oImg);
+        editor&&editor.canvas.add(oImg);
       });
     };
 
@@ -44,12 +44,22 @@ const MyEditor = (props) => {
   }, [editor?.canvas, props]);
 
   useEffect(() => {
-    editor?.canvas.once("object:modified", () => {
-      let json = editor?.canvas.toJSON();
-
+    const handleObjectModified = () => {
+      let json = editor?.canvas?.toJSON();
       props.takeSnapshot(json);
-    });
+  
+      // Remove the listener after it's been triggered once
+      editor?.canvas?.off('object:modified', handleObjectModified);
+    };
+  
+    editor?.canvas?.on('object:modified', handleObjectModified);
+  
+    // Clean up the listener when the component unmounts
+    return () => {
+      editor?.canvas?.off('object:modified', handleObjectModified);
+    };
   }, [editor?.canvas, props]);
+  
 
   return (
     <div>
