@@ -1,58 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { fabric } from "fabric"; // Make sure fabric is installed in your project
-import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
-import styles from "./styles.module.css";
-const DEFAULT_IMAGE = "./white-realistic-a5-notebook-closed-600nw-1556581460.webp";
+import React, { useEffect, useRef, useState } from 'react';
+import { fabric } from 'fabric';
+import db from './db';
+import DesignCanvasList from './DesignCanvasList';
 
-interface AppProps { }
+const CanvasTemplate: React.FC = () => {
+  const [currentSide, setCurrentSide] = useState("front");
 
-const CanvasTemplate: React.FC<AppProps> = () => {
-  const [text, setText] = useState<string>("");
-  const { editor, onReady } = useFabricJSEditor();
+  const [isPreview, setIsPreview] = useState(false);
 
-  const _onReady = (canvas: fabric.Canvas | null) => {
-    if (!canvas) {
-      console.error("Canvas is null");
-      return;
-    }
-    fabric.Image.fromURL(DEFAULT_IMAGE, (img) => {
-      canvas.setBackgroundImage && canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-      onReady(canvas);
-    });
-  };
-  
-  const onAddText = () => {
-    editor && editor.addText(text);
-    setText("");
-  };
+  const [snapshot, setSnapshot] = useState(() => {
+    return  {};
+  });
 
-  const onDeleteAll = () => {
-    editor && editor.deleteAll();
-    setText("");
-  };
-
-  const onDeleteSelected = () => {
-    editor && editor.deleteSelected();
-  };
-
+  useEffect(() => {
+    localStorage.setItem("snapshot", JSON.stringify(snapshot));
+  }, [snapshot]);
   return (
-    <div className={styles.design_parent}>
-      <div className={styles.sample_container}>
-        <FabricJSCanvas className={styles.sample_canvas} onReady={_onReady} />
-      </div>
-      <div>
-        <fieldset>
-          <input
-            className={styles.input_box}
-            name={`text`}
-            type={`text`}
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-          />
-          <button className={styles.btn} onClick={onAddText}>Add Text</button>
-        </fieldset>
-        <button onClick={onDeleteAll}>Reset</button>
-      </div>
+    <div>
+      <DesignCanvasList
+        canvases={db.canvases}
+        snapshot={snapshot}
+        setSnapshot={setSnapshot}
+      />
     </div>
   );
 };
